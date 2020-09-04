@@ -67,7 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
             fieldMinute.textContent = addZero(minutes);
             fieldSecond.textContent = addZero(seconds);
 
-            if (total <= 0) clearInterval(intervalUpdateTimeID);
+            if (total <= 0) {
+                clearInterval(intervalUpdateTimeID);
+            }
         }
     }
 
@@ -76,4 +78,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     setRemainingTime('.timer', finishDay);
+
+    //modal
+    const modalOpenBtns = document.querySelectorAll('button[data-modal-open]'),
+          modal = document.querySelector('.modal'),
+          modalCloseBtn = modal.querySelector('div[data-modal-close]');
+
+    function closeModal() {
+        modal.classList.toggle('show');
+        document.body.style.overflow = '';
+    }
+
+    function openModal() {
+        modal.classList.toggle('show');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    modalOpenBtns.forEach(btn => {
+        btn.addEventListener('click', openModal);
+    });
+
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', evt => {
+        if (evt.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', evt => {
+        if (evt.keyCode === 27 && modal.classList.contains('show')) {
+            closeModal();
+        }
+    });
 });
