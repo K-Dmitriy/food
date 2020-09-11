@@ -40,7 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function getRemainingTime(endtime) {
 
-        const total = Date.parse(endtime) - Date.now();
+        let total = Date.parse(endtime) - Date.now();
+
+        if (total <= 0) {
+            total = 0;
+        }
+
         let days = Math.floor(total / (1000 * 60 * 60 * 24)),
             hours = Math.floor((total / (1000 * 60 * 60)) % 24),
             minutes = Math.floor((total / (1000 * 60)) % 60),
@@ -67,7 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
             fieldMinute.textContent = addZero(minutes);
             fieldSecond.textContent = addZero(seconds);
 
-            if (total <= 0) clearInterval(intervalUpdateTimeID);
+            if (total <= 0) {
+                clearInterval(intervalUpdateTimeID);
+            }
         }
     }
 
