@@ -198,4 +198,47 @@ document.addEventListener('DOMContentLoaded', () => {
         'menu__item'
     ).render();
 
+    //отправка формы
+    const forms = document.querySelectorAll('form');
+    const responseStatus = {
+        load: 'Загрузка...',
+        success: 'Загружено.',
+        error: 'Ошибка!'
+    };
+
+    function postData(form) {
+        form.addEventListener('submit', evt => {
+            evt.preventDefault();
+
+            const responseMessage = document.createElement('p');
+            responseMessage.textContent = responseStatus.load;
+            form.append(responseMessage);
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+            const formData = new FormData(form);
+            // request.setRequestHeader('Content-type', 'multipart/form-data'); //не нужно для form-data, заголовки устанавливаются автоматом
+
+            //{ вариант через JSON, так же строчка(2) кода в server.php
+                request.setRequestHeader('Conntent-type', 'application/json');
+                const obj = {};
+                formData.forEach((value, key) => obj[key] = value);
+                const json = JSON.stringify(obj);          
+            //}
+            request.send(json);
+    
+            request.addEventListener('load', () => {
+                if (request.status === 200) {
+                    form.reset();
+                    responseMessage.textContent = responseStatus.success;
+                    setTimeout(() => responseMessage.remove(), 2000);
+                } else {
+                    responseMessage.style.color = 'red';
+                    responseMessage.textContent = responseStatus.error;
+                }
+            });
+        });
+    }
+
+    forms.forEach(form => postData(form));
 });
