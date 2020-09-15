@@ -215,29 +215,29 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             form.insertAdjacentElement('afterend', responseMessage);
 
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php');
             const formData = new FormData(form);
-            // request.setRequestHeader('Content-type', 'multipart/form-data'); //не нужно для form-data, заголовки устанавливаются автоматом
+            const obj = {};
+            
+            formData.forEach((value, key) => obj[key] = value);
 
-            //{ вариант через JSON, так же строчка(2) кода в server.php
-                request.setRequestHeader('Conntent-type', 'application/json');
-                const obj = {};
-                formData.forEach((value, key) => obj[key] = value);
-                const json = JSON.stringify(obj);          
-            //}
-            request.send(json);
-    
-            request.addEventListener('load', () => {
-                if (request.status === 200) {
-                    form.reset();
+            fetch('server.php', {
+                method: 'POST',
+                body: JSON.stringify(obj),
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            })
+                .then(data => data.text())
+                .then(data => {
+                    console.log(data);
                     showThanksModal(responseStatus.success);
                     responseMessage.remove();
-                } else {
+                })
+                .catch(() => {
                     responseMessage.style.color = 'red';
                     showThanksModal(responseStatus.error);
-                }
-            });
+                })
+                .finally(() => form.reset());
         });
     }
 
