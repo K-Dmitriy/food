@@ -3,16 +3,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabContents = document.querySelectorAll('.tabcontent'),
           tabHeaderItems = document.querySelector('.tabheader__items');
 
-    function hideTabs() {
-        tabContents.forEach(tab => {
-            tab.classList.add('hide');
-            tab.classList.remove('show', 'fade');
+    function hideElements(elements) {
+        elements.forEach(element => {
+            element.classList.add('hide');
+            element.classList.remove('show', 'fade');
         });
     }
 
-    function showTabs(i = 0) {
-        tabContents[i].classList.add('show', 'fade');
-        tabContents[i].classList.remove('hide');
+    function showElement(elements, i = 0) {
+        elements[i].classList.add('show', 'fade');
+        elements[i].classList.remove('hide');
     }
 
     tabHeaderItems.addEventListener('click', evt => {
@@ -25,15 +25,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (target === tab) {
                     tab.classList.add('tabheader__item_active');
-                    hideTabs();
-                    showTabs(i);
+                    hideElements(tabContents);
+                    showElement(tabContents, i);
                 }
             });
         }
     });
 
-    hideTabs();
-    showTabs();
+    hideElements(tabContents);
+    showElement(tabContents);
 
     //timer
     const finishDay = '2020-09-11';
@@ -259,4 +259,39 @@ document.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }, 4000);
     }
+
+    //slider
+    const offerSlider = document.querySelector('.offer__slider'),
+          numTotalSlide = offerSlider.querySelector('#total'),
+          numCurrentSlide = offerSlider.querySelector('#current'),
+          offerSlides = offerSlider.querySelectorAll('.offer__slide'),
+          offerSliderBtnPrev = offerSlider.querySelector('.offer__slider-prev'),
+          offerSliderBtnNext = offerSlider.querySelector('.offer__slider-next');
+    let slideIndex = 1;
+
+    function changeSlide(n = 0) {
+        hideElements(offerSlides);
+        showElement(offerSlides, slideIndex + n - 1);
+        numCurrentSlide.textContent = addZero(slideIndex += n);
+    }
+
+    changeSlide();
+
+    numTotalSlide.textContent = addZero(offerSlides.length);
+
+    offerSliderBtnNext.addEventListener('click', () => {
+        if (slideIndex === offerSlides.length) {
+            slideIndex = 0;
+        }
+
+        changeSlide(1);
+    });
+
+    offerSliderBtnPrev.addEventListener('click', () => {
+        if (slideIndex === 1) {
+            slideIndex = offerSlides.length + 1;
+        }
+
+        changeSlide(-1);
+    });
 });
