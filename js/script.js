@@ -266,32 +266,80 @@ document.addEventListener('DOMContentLoaded', () => {
           numCurrentSlide = offerSlider.querySelector('#current'),
           offerSlides = offerSlider.querySelectorAll('.offer__slide'),
           offerSliderBtnPrev = offerSlider.querySelector('.offer__slider-prev'),
-          offerSliderBtnNext = offerSlider.querySelector('.offer__slider-next');
-    let slideIndex = 1;
+          offerSliderBtnNext = offerSlider.querySelector('.offer__slider-next'),
+          offerSlidesWrap = offerSlider.querySelector('.offer__slider-wrapper'),
+          slideWidth = parseInt(window.getComputedStyle(offerSlidesWrap).width);
+    let slideIndex = 1,
+        sliderOffset = 0;
 
-    function changeSlide(n = 0) {
-        hideElements(offerSlides);
-        showElement(offerSlides, slideIndex + n - 1);
-        numCurrentSlide.textContent = addZero(slideIndex += n);
-    }
+    // function changeSlide(n = 0) {
+    //     hideElements(offerSlides);
+    //     showElement(offerSlides, slideIndex + n - 1);
+    //     numCurrentSlide.textContent = addZero(slideIndex += n);
+    // }
 
-    changeSlide();
+    // changeSlide();
 
-    numTotalSlide.textContent = addZero(offerSlides.length);
+    // numTotalSlide.textContent = addZero(offerSlides.length);
+
+    // offerSliderBtnNext.addEventListener('click', () => {
+    //     if (slideIndex === offerSlides.length) {
+    //         slideIndex = 0;
+    //     }
+
+    //     changeSlide(1);
+    // });
+
+    // offerSliderBtnPrev.addEventListener('click', () => {
+    //     if (slideIndex === 1) {
+    //         slideIndex = offerSlides.length + 1;
+    //     }
+
+    //     changeSlide(-1);
+    // });
+
+    //carousel
+    let sliderField = document.createElement('div');
+
+    sliderField.classList.add('offer__slider-inner');
+    sliderField.style.display = 'flex';
+    sliderField.style.width = 100 * offerSlides.length + '%';
+    sliderField.style.transition = '0.5s all';
+
+    offerSlides.forEach(slide => {
+        slide.style.width = slideWidth + 'px';
+        sliderField.append(slide);
+    });
+
+    offerSlidesWrap.style.overflow = 'hidden';
+    offerSlidesWrap.append(sliderField);
 
     offerSliderBtnNext.addEventListener('click', () => {
-        if (slideIndex === offerSlides.length) {
-            slideIndex = 0;
+        numCurrentSlide.textContent = addZero(slideIndex += 1);
+
+        if (sliderOffset === slideWidth * (offerSlides.length - 1)) {
+            sliderOffset = 0;
+            numCurrentSlide.textContent = addZero(slideIndex = 1);
+        } else {
+            sliderOffset += slideWidth;
         }
 
-        changeSlide(1);
+        sliderField.style.transform = `translateX(-${sliderOffset}px)`;
     });
 
     offerSliderBtnPrev.addEventListener('click', () => {
-        if (slideIndex === 1) {
-            slideIndex = offerSlides.length + 1;
+        numCurrentSlide.textContent = addZero(slideIndex -= 1);
+
+        if (sliderOffset === 0) {
+            sliderOffset = slideWidth * (offerSlides.length - 1);
+            numCurrentSlide.textContent = addZero(slideIndex = offerSlides.length);
+        } else {
+            sliderOffset -= slideWidth;
         }
 
-        changeSlide(-1);
+        sliderField.style.transform = `translateX(-${sliderOffset}px)`;
     });
+
+    numTotalSlide.textContent = addZero(offerSlides.length);
+    numCurrentSlide.textContent = addZero(slideIndex);
 });
