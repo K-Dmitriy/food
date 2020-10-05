@@ -36,11 +36,23 @@ document.addEventListener('DOMContentLoaded', () => {
     showElement(tabContents);
 
     //timer
-    const finishDay = '2020-09-11';
-    
-    function getRemainingTime(endtime) {
+    // const finishDay = '2020-09-11';
+    const nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+          monthNames = 'января,февраля,марта,апреля,мая,июня,июля,августа,сентября,октября,ноября,декабря'.split(','),
+          monthNumber = '01,02,03,04,05,06,07,08,09,10,11,12'.split(','),
+          finishDay = `${nextDay.getFullYear()}-${monthNumber[nextDay.getMonth()]}-${nextDay.getDate()}`;
 
-        let total = Date.parse(endtime) - Date.now();
+    function getRemainingTime(endtime) {
+        const date = new Date();
+
+        let total = Date.parse(endtime) - Date.UTC(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate(),
+                date.getHours(),
+                date.getMinutes(),
+                date.getSeconds()
+        );
 
         if (total <= 0) {
             total = 0;
@@ -62,8 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
               fieldSecond = timer.querySelector('#seconds'),
               intervalUpdateTimeID = setInterval(updateTime, 1000);
 
-        updateTime();
-
         function updateTime() {
             const { total, days, hours, minutes, seconds } = getRemainingTime(endtime);
 
@@ -76,11 +86,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(intervalUpdateTimeID);
             }
         }
+
+        updateTime();
     }
 
     function addZero(number) {
         return number < 10 ? '0' + number : number;
     }
+
+    document.querySelector('.promotion__end').textContent = `${nextDay.getDate()} ${monthNames[nextDay.getMonth()]}`;
 
     setRemainingTime('.timer', finishDay);
 
