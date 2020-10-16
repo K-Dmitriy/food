@@ -1,21 +1,21 @@
-function slider() {
-    const offerSlider = document.querySelector('.offer__slider'),
-          numTotalSlide = offerSlider.querySelector('#total'),
-          numCurrentSlide = offerSlider.querySelector('#current'),
-          offerSlides = offerSlider.querySelectorAll('.offer__slide'),
-          offerSliderBtnPrev = offerSlider.querySelector('.offer__slider-prev'),
-          offerSliderBtnNext = offerSlider.querySelector('.offer__slider-next'),
-          offerSlidesWrap = offerSlider.querySelector('.offer__slider-wrapper'),
+function addZero(number) {
+    return number < 10 ? '0' + number : number;
+}
+
+function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field}) {
+    const offerSlider = document.querySelector(container),
+          numTotalSlide = offerSlider.querySelector(totalCounter),
+          numCurrentSlide = offerSlider.querySelector(currentCounter),
+          offerSlides = offerSlider.querySelectorAll(slide),
+          offerSliderBtnPrev = offerSlider.querySelector(prevArrow),
+          offerSliderBtnNext = offerSlider.querySelector(nextArrow),
+          offerSlidesWrap = offerSlider.querySelector(wrapper),
           slideWidth = parseInt(window.getComputedStyle(offerSlidesWrap).width),
           sliderField = document.createElement('div'),
           indicators = document.createElement('ol'),
           dot = document.createElement('li');
     let slideIndex = 1,
         sliderOffset = 0;
-
-    function addZero(number) {
-        return number < 10 ? '0' + number : number;
-    }
 
     // function changeSlide(n = 0) {
     //     hideElements(offerSlides);
@@ -103,7 +103,7 @@ function slider() {
     });
 
     //carousel
-    sliderField.classList.add('offer__slider-inner');
+    sliderField.classList.add(field);
     sliderField.style.display = 'flex';
     sliderField.style.width = 100 * offerSlides.length + '%';
     sliderField.style.transition = '0.5s all';
@@ -140,4 +140,5 @@ function slider() {
     numCurrentSlide.textContent = addZero(slideIndex);
 }
 
-module.exports = slider;
+export default slider;
+export { addZero };

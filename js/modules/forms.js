@@ -1,21 +1,12 @@
-function forms() {
-    const forms = document.querySelectorAll('form');
+import { closeModal } from "./modal";
+import { postData } from "../services/services";
+
+function forms(formSelector) {
+    const forms = document.querySelectorAll(formSelector);
     const responseStatus = {
-        load: 'img/form/spinner.svg',
+        load: './img/form/spinner.svg',
         success: 'Загружено.',
         error: 'Ошибка!'
-    };
-
-    const postData = async (url, data) => {
-        const res = await fetch(url, {
-            method: 'POST',
-            body: data,
-            headers: {
-                'Content-type': 'application/json'
-            }
-        });
-
-        return await res.json();
     };
 
     function bindPostData(form) {
@@ -50,7 +41,9 @@ function forms() {
     forms.forEach(form => bindPostData(form));
 
     function showThanksModal(message) {
-        const prevModalDialog = document.querySelector('.modal__dialog');
+        const prevModalDialog = document.querySelector('.modal__dialog'),
+              modal = document.querySelector('.modal');
+
         prevModalDialog.classList.add('hide');
 
         modal.classList.add('show');
@@ -64,14 +57,14 @@ function forms() {
             </div>
         `;
 
-        document.querySelector('.modal').append(thanksModal);
+        modal.append(thanksModal);
         setTimeout(() => {
             thanksModal.remove();
             prevModalDialog.classList.add('show');
             prevModalDialog.classList.remove('hide');
-            closeModal();
+            closeModal('.modal');
         }, 40000);
     }
 }
 
-module.exports = forms;
+export default forms;

@@ -1,4 +1,6 @@
-function timer() {
+import { addZero } from './slider';
+
+function timer(id) {
     // const finishDay = '2020-09-11';
     const nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
           monthNames = 'января,февраля,марта,апреля,мая,июня,июля,августа,сентября,октября,ноября,декабря'.split(','),
@@ -53,13 +55,9 @@ function timer() {
         updateTime();
     }
 
-    function addZero(number) {
-        return number < 10 ? '0' + number : number;
-    }
-
     document.querySelector('.promotion__end').textContent = `${nextDay.getDate()} ${monthNames[nextDay.getMonth()]}`;
 
-    setRemainingTime('.timer', finishDay);
+    setRemainingTime(id, finishDay);
 }
 
-module.exports = timer;
+export default timer;
